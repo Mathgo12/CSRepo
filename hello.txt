@@ -1,0 +1,21 @@
+Hello, my name is Surya. 
+
+Date: 5/11
+What I accomplished specifically:
+-Today, I was able to finish resolving issues with Apache Maven and external packages in order to install the Deeplearning4j library into Java. At the same time, I was able to download the necessary data (called the MNIST dataset) from online and convert the images into their proper format (PNG). Meanwhile, I explored file handling with java, specifically creating File, FileInputStream, and FileOutputStream objects which allow me to transport data into custom directories and  configure paths. I experimented with reading, creating, appending, and displacing text files so that in the future I could read the image data and place the images in a particular format to feed into the model.  
+	
+Comparison of what I did vs what I planned:
+-I planned to set up Maven and add all the necessary dependencies for packages in Deeplearning4j. I was able to accomplish most of this today. I was able to import some of the required classes as planned. I was not able to set up my three main classes (Classifier, Main, and GUI), and I instead worked on downloading data, file handling, and fixing configuration issues. I wanted to make sure the data could be properly used for the model with little hesitancy.
+Overally, little to no coding was done for the final project. I only experimented with file handling on my own to learn how to manage the data. 
+
+What I plan to do next time:
+-Next time, I plan to wrap up everything necessary to learn with data management and instead start implementing the main class for the model. In order to better manage my time, I plan to focus on what I know with java instead of staying stuck with whatever seems difficult to implement. I also plan on taking separate notes on classes, methods, and newly learned code in order to better remember and apply my skills more quickly to problems within this project. 
+
+Personal Productivity Rating (0-5): 4
+• 1 = I did nothing constructive
+• 2 = I did some, but I also goofed off
+• 3 = I did an average amount of work for my ability
+• 4= I did an above average amount of work for my ability
+• 5 = I did an awesome amount of work. I have never done more.
+
+**No new coding was done for the project today.
