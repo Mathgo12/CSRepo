@@ -62,12 +62,19 @@ public class Main {
         
         //pass through neural net and store it in output array
         INDArray output = model.output(image);
+        double highest = output.getFloat(0);
+        int bestValue = 0;
         
-        for(int i = 0; i<output.length(); i++)
+        for(int i = 0; i<output.length(); i++)  // Prediction confidences (all add up to 1). The value closest to 1 is predicted. 
         {
         	System.out.println(i + ": " + output.getFloat(i));
+        	if(output.getFloat(i) > highest) { 
+        		highest = output.getFloat(i);
+        		bestValue = i;
+        	}
         }
 		
+        System.out.println("Best Prediction: " + bestValue);
 	}
 	
 }
