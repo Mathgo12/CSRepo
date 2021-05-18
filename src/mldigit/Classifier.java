@@ -1,4 +1,4 @@
-package ml.ml;
+package mldigit;
 
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 
@@ -113,9 +113,9 @@ public class Classifier {
 
         int rngSeed = 123;
         int nEpochs = 2;
-
+        
         System.out.print("Build Model...");
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()   //Building Neural Network Model
                 .seed(rngSeed)
                 .updater(new Nesterovs(0.006, 0.9))
                 .l2(1e-4).list()

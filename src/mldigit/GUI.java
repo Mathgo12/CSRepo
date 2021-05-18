@@ -1,4 +1,4 @@
-package ml.ml;
+package mldigit;
 import javax.swing.*;
 import java.awt.*;
 

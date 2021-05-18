@@ -1,4 +1,4 @@
-package ml.ml;
+package mldigit;
 
 //IO, Image, File handling imports
 import java.awt.image.BufferedImage;
