@@ -40,7 +40,7 @@ import javax.imageio.ImageIO;
 
 
 public class GUI  {
-
+    private static int i;
     private static  JButton button;
     private static JButton button2;
     private static ScribblePane2 scribblePane;
@@ -87,22 +87,26 @@ public class GUI  {
 
         // Create the main scribble pane component, give it a border, and
         // a background color, and add it to the content pane
+
         scribblePane = new ScribblePane2();
         scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
         scribblePane.setBackground(Color.white);
+        BufferedImage bufferImage = new BufferedImage(28, 28,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bufferGraphics = bufferImage.createGraphics();
         contentPane.add(scribblePane, BorderLayout.CENTER);
 
         // Create a menubar and add it to this window. Note that JFrame
         // handles menus specially and has a special method for adding them
         // outside of the content pane.
         JMenuBar menubar = new JMenuBar(); // Create a menubar
-        frame.setJMenuBar(menubar); // Display it in the JFrame
+        //frame.setJMenuBar(menubar); // Display it in the JFrame
 
         // Create menus and add to the menubar
         JMenu filemenu = new JMenu("File");
         JMenu colormenu = new JMenu("Color");
         menubar.add(filemenu);
-        menubar.add(colormenu);
+       // menubar.add(colormenu);
 
         // Create some Action objects for use in the menus and toolbars.
         // An Action combines a menu title and/or icon with an ActionListener.
@@ -117,7 +121,7 @@ public class GUI  {
         // Populate the menus using Action objects
 
 
-        colormenu.add(black);
+       // colormenu.add(black);
 
 
 
@@ -126,7 +130,7 @@ public class GUI  {
         JToolBar toolbar = new JToolBar();
 
 
-        contentPane.add(toolbar, BorderLayout.NORTH);
+       // contentPane.add(toolbar, BorderLayout.NORTH);
 
         // Create another toolbar for use as a color palette and add to
         // the left side of the window.
@@ -134,7 +138,7 @@ public class GUI  {
         palette.add(black);
 
         palette.setOrientation(SwingConstants.VERTICAL);
-        contentPane.add(palette, BorderLayout.WEST);
+       // contentPane.add(palette, BorderLayout.WEST);
 
         panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
 
@@ -188,21 +192,20 @@ public class GUI  {
 
     }
 
-    public void saveImage(){
-        int i =0;
-
-    }
 
 
 
     public static void setUpButtonListeners(){
+
 
         ActionListener buttonListener = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
 
                 System.out.println("save");
-                saveDrawing();
+
+                saveDrawing(i);
+                i++;
             }
 
 
@@ -224,18 +227,18 @@ public class GUI  {
 
     }
 
-    public static void saveDrawing() {
+    public static void saveDrawing(int i) {
         BufferedImage imagebuf = null;
         try {
-            imagebuf = new Robot().createScreenCapture(contentPane.bounds());
+            imagebuf = new Robot().createScreenCapture(scribblePane.bounds());
         } catch (AWTException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         Graphics2D graphics2D = imagebuf.createGraphics();
-        contentPane.paint(graphics2D);
+        scribblePane.paint(graphics2D);
         try {
-            ImageIO.write(imagebuf, "jpeg", new File("save1.jpeg"));
+            ImageIO.write(imagebuf, "png", new File("save" + i +".png"));
             System.out.println("image saved");
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -364,6 +367,8 @@ class ScribblePane2 extends JPanel {
 
     /** Draw from the last point to this point, then remember new point */
     public void lineto(int x, int y) {
+
+
         Graphics g = getGraphics(); // Get the object to draw with
         g.setColor(color); // Tell it what color to use
         g.drawLine(last_x, last_y, x, y); // Tell it what to draw
