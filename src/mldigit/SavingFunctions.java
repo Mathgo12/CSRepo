@@ -1,10 +1,6 @@
+package mldigit;
 
-/**
- * Write a description of class SavingFunctions here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
+
 public class SavingFunctions
 {
     // instance variables - replace the example below with your own
@@ -30,6 +26,7 @@ public class SavingFunctions
         // put your code here
         return x + y;
     }
+    
     public String saveDrawing(){
         drawingView.setDrawingCacheEnabled(true);
         Bitmap b = drawingView.getDrawingCache();
@@ -73,4 +70,5 @@ public class SavingFunctions
         }
 
     }
+    */
 }
