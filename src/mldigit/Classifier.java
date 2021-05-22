@@ -37,7 +37,7 @@ public class Classifier {
 
 	private static String path = "C:\\Users\\prsnb\\MnistData\\mnist_png\\";
 	private static int batches = 10;
-	private static int epochs = 5;
+	private static int epochs = 1;
 	private static MultiLayerNetwork network;
 	private static int randomSeed = 56543219;
 	
@@ -89,7 +89,7 @@ public class Classifier {
                         .weightInit(WeightInit.XAVIER).build())
                 .build();
 
-        MultiLayerNetwork network = new MultiLayerNetwork(conf);
+        network = new MultiLayerNetwork(conf);
         network.init();
 
         network.setListeners(new ScoreIterationListener(500));  //Print score every 500 iterations
@@ -117,8 +117,8 @@ public class Classifier {
 	        trainTestModel(trainIterator, testIterator);
 	        
 	        //Export model as file
-	        File ministModelPath = new File("C:\\Users\\prsnb\\MnistData\\savedModel.zip");
-	        ModelSerializer.writeModel(network, ministModelPath, true);
+	        File ministModelPath = new File("C:\\Users\\prsnb\\MnistData\\Save\\savedModel.zip");
+	        ModelSerializer.writeModel(network, ministModelPath, false);
 	        
 	       
 	      

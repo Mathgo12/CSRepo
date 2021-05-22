@@ -1,4 +1,4 @@
-
+package mldigit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,14 +30,19 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+
+import org.datavec.image.loader.NativeImageLoader;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
-
-
-
 
 public class GUI  {
     private static int i;
@@ -83,13 +88,7 @@ public class GUI  {
         button2 = new JButton("Erase Image");
 
 
-
-        // Specify a layout manager for the content pane
         contentPane.setLayout(new BorderLayout());
-
-        // Create the main scribble pane component, give it a border, and
-        // a background color, and add it to the content pane
-
         scribblePane = new ScribblePane2();
         scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
        // scribblePane.setBackground(Color.black);
@@ -200,17 +199,57 @@ public class GUI  {
 
 
         ActionListener buttonListener = new ActionListener(){
-            @Override
+            //@Override
             public void actionPerformed(ActionEvent e){
-
+            	
+            	try {
                 System.out.println("save");
-
-                int output = 0;
-
-
                 saveDrawing(i);
+                
+                int outputVal = 0;
+              //Model Testing
+        		File path = new File("C:\\Users\\prsnb\\MnistData\\Save\\savedModel.zip");
+        		MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(path);
+        		
+        		File imagePath = new File("C:\\eclpise\\eclipse-workspace\\ml\\save" + i + ".png");
+        		//BufferedImage img = ImageIO.read(imagePath);s
+
+                //Use the nativeImageLoader to convert to numerical matrix
+                NativeImageLoader loader = new NativeImageLoader(28, 28, 1);
+
+                //put image into INDArray
+                INDArray image = loader.asMatrix(imagePath).reshape(new int[]{1, 784});
+                //System.out.println(image);
+                //values need to be scaled
+                DataNormalization scalar = new ImagePreProcessingScaler(0, 1);
+
+                //then call that scalar on the image dataset
+                scalar.transform(image);
+                
+                //pass through neural net and store it in output array
+                INDArray output = model.output(image);
+                double highest = output.getFloat(0);
+                int bestValue = 0;
+                
+                for(int i = 0; i<output.length(); i++)  // Prediction confidences (all add up to 1). The value closest to 1 is predicted. 
+                {
+                	
+                	if(output.getFloat(i) > highest) { 
+                		highest = output.getFloat(i);
+                		bestValue = i;
+                	}
+                }
+        		
+                System.out.println("Best Prediction: " + bestValue);
+                outputVal = bestValue;
+                
                 i++;
-                label.setText("" + output);
+                label.setText("" + outputVal);
+                
+            	}catch(IOException exception) {
+            		exception.printStackTrace();
+            	}
+            	
 
             }
 
@@ -218,7 +257,7 @@ public class GUI  {
         };
 
         ActionListener buttonListener2 = new ActionListener(){
-            @Override
+            //@Override
             public void actionPerformed(ActionEvent e){
                 System.out.println("erase");
                 scribblePane.erase();
@@ -401,7 +440,7 @@ class ScribblePane2 extends JPanel {
         // Get the object to draw with
         this.clear();
         g.setColor(color);
-        ((Graphics2D) g).setStroke(new BasicStroke(10));// Tell it what color to use
+        ((Graphics2D) g).setStroke(new BasicStroke(18));// Tell it what color to use
         g.drawLine(last_x, last_y, x, y); // Tell it what to draw
         moveto(x, y);
 
