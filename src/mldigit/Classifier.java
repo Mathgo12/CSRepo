@@ -107,6 +107,33 @@ public class Classifier {
 		
 	}
 	
+	public static int prediction(File savedImagePath, MultiLayerNetwork model) throws IOException{
+		
+        NativeImageLoader loader = new NativeImageLoader(28, 28, 1);
+ 
+        INDArray image = loader.asMatrix(savedImagePath).reshape(new int[]{1, 784});
+        DataNormalization scalar = new ImagePreProcessingScaler(0, 1);
+        scalar.transform(image);
+        INDArray output = model.output(image);
+        double highest = output.getFloat(0);
+        int bestValue = 0;
+        
+        for(int i = 0; i<output.length(); i++)  // Prediction confidences (all add up to 1). The value closest to 1 is predicted. 
+        {
+        	if(output.getFloat(i) > highest) { 
+        		highest = output.getFloat(i);
+        		bestValue = i;
+        	}
+        }
+		
+        System.out.println("Best Prediction: " + bestValue);
+
+
+        return bestValue;
+        
+		
+	}
+	
 	public static void main(String[] args) throws IOException{
 		
 		    
