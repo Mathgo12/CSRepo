@@ -26,7 +26,7 @@ public class GUI  {
     private static JLabel label;
     private static ScribblePane scribblePane;
     private static JPanel contentPane;
-    BufferedImage bufferImage;
+
 
 
 
