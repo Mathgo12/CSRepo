@@ -28,35 +28,34 @@ public class GUI  {
     private static JPanel contentPane;
     BufferedImage bufferImage;
 
-//    public static void main(String[] args){
-//
-//        
-//
-//    }
-
-
 
 
     public GUI(){
-        JFrame frame = new JFrame();
+        
+	JFrame frame = new JFrame();
 
         frame.setSize(600,600);
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GridBagLayout layout = new GridBagLayout();
+        
+	    
+	GridBagLayout layout = new GridBagLayout();
 
 
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
-        label = new JLabel("",SwingConstants.CENTER);
+        
+	label = new JLabel("",SwingConstants.CENTER);
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
 
         JLabel label2 = new JLabel("PREDICTED NUMBER",SwingConstants.CENTER);
         label2.setFont(new Font(labelFont.getName(), Font.PLAIN, 12));
-        contentPane = new JPanel();
+        
+	contentPane = new JPanel();
         contentPane.add(label2);
-        button = new JButton("Classify Image");
+        
+	button = new JButton("Classify Image");
         button2 = new JButton("Erase Image");
         button.addActionListener(new ButtonListeners());
         button2.addActionListener(new ButtonListeners());
@@ -64,13 +63,11 @@ public class GUI  {
         contentPane.setLayout(new BorderLayout());
         scribblePane = new ScribblePane();
         scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-       // scribblePane.setBackground(Color.black);
+    
 
         contentPane.add(scribblePane, BorderLayout.CENTER);
-
-
-
-       // contentPane.add(toolbar, BorderLayout.NORTH);
+	    
+	  
 
 
         panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
@@ -79,11 +76,14 @@ public class GUI  {
 
 
         panel.setLayout(layout);
-        panel2.setLayout(new BorderLayout());
+        
+	panel2.setLayout(new BorderLayout());
         panel2.add(label, BorderLayout.SOUTH);
         panel2.add(label2, BorderLayout.NORTH);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+	GridBagConstraints gbc = new GridBagConstraints();
+        
+	gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(contentPane, gbc);
@@ -94,8 +94,7 @@ public class GUI  {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        //gbc.fill = GridBagConstraints.HORIZONTAL;
-        //gbc.gridwidth = 2;
+        
         panel.add(button, gbc);
 
         gbc.gridx = 1;
@@ -106,17 +105,11 @@ public class GUI  {
 
 
         frame.add(panel);
-
-
-
-        frame.setTitle("GUI");
+        frame.setTitle("HandDrawn Digit Recognition");
         frame.setVisible(true);
 
 
-
-
-
-
+	    
 
     }
 
@@ -167,7 +160,7 @@ public class GUI  {
 
         BufferedImage imagebuf = null;
         imagebuf = scribblePane.getImage();
-        //scribblePane.paint(graphics2D);
+        
         try {
             ImageIO.write(imagebuf, "png", new File("drawnImages\\save" + i +".png"));
             System.out.println("image saved");
@@ -187,7 +180,8 @@ public class GUI  {
     }
 
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        
+	Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = dimg.createGraphics();
@@ -198,19 +192,6 @@ public class GUI  {
     }
 
 
-
-
-    /** This inner class defines the "clear" action that clears the scribble */
-
-
-    /** This inner class defines the "quit" action to quit the program */
-
-
-    /**
-     * This inner class defines an Action that sets the current drawing color of
-     * the ScribblePane2 component. Note that actions of this type have icons
-     * rather than labels
-     */
 
 
 
@@ -269,6 +250,7 @@ class ScribblePane extends JPanel {
         g.drawImage(bufferImage,0,0, null);
 
     }
+    
     public void paintComponent(Graphics g){
 
         g.drawImage(bufferImage,0,0, null);
@@ -292,6 +274,8 @@ class ScribblePane extends JPanel {
     public void clear() {
         repaint();
     }
+    
+
     public void erase(){
 
         g.clearRect(0,0,s,s);
@@ -305,8 +289,6 @@ class ScribblePane extends JPanel {
 
 
     }
-
-    /** This field holds the current drawing color property */
  
     /** This is the property "setter" method for the color property */
     public void setColor(Color color) {
