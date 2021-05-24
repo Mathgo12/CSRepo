@@ -20,170 +20,139 @@ import java.io.*;
 import javax.imageio.ImageIO;
 
 public class GUI  {
-    private static int i;
-    private static  JButton button;
-    private static JButton button2;
-    private static JLabel label;
-    private static ScribblePane scribblePane;
-    private static JPanel contentPane;
-    BufferedImage bufferImage;
-
-//    public static void main(String[] args){
-//
-//        
-//
-//    }
-
-
-
+    private int i;
+    private JButton button;
+    private JButton button2;
+    private JLabel label;
+    private ScribblePane scribblePane;
+    private JPanel contentPane;
+    private BufferedImage bufferImage;
+    private MultiLayerNetwork model;
+   
+    
 
     public GUI(){
-        JFrame frame = new JFrame();
+    	
+    	try {
+    	
+	        JFrame frame = new JFrame();
+	
+	        frame.setSize(600,600);
+	        frame.setResizable(false);
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame.setTitle("Hand-Written Digit Recognition: numbers 0-9");
+	  
+	        File path = new File("modelSave\\savedModel.zip");
+	        model = ModelSerializer.restoreMultiLayerNetwork(path);
+	
+	        JPanel panel = new JPanel();
+	        JPanel panel2 = new JPanel();
+	        label = new JLabel("PREDICTED VALUE HERE",SwingConstants.CENTER);
+	        Font labelFont = label.getFont();
+	        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
+	
+	        contentPane = new JPanel();
+	        button = new JButton("Classify Image");
+	        button2 = new JButton("Erase Image");
+	        button.addActionListener(new ButtonListeners());
+	        button2.addActionListener(new ButtonListeners());
+	
+	        contentPane.setLayout(new BorderLayout());
+	        scribblePane = new ScribblePane();
+	        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
+	        contentPane.add(scribblePane, BorderLayout.CENTER);
+	
+	        GridBagLayout layout = new GridBagLayout();
+	        panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+	        panel2.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+	
+	        panel.setLayout(layout);
+	        panel2.setLayout(new BorderLayout());
+	        panel2.add(label, BorderLayout.SOUTH);
+	        GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.fill = GridBagConstraints.HORIZONTAL;
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+	        panel.add(contentPane, gbc);
+	
+	        gbc.gridx = 1;
+	        gbc.gridy = 0;
+	        panel.add(panel2,gbc);
+	
+	        gbc.gridx = 0;
+	        gbc.gridy = 2;
+	        //gbc.fill = GridBagConstraints.HORIZONTAL;
+	        //gbc.gridwidth = 2;
+	        panel.add(button, gbc);
+	
+	        gbc.gridx = 1;
+	        gbc.gridy = 2;
+	
+	        panel.add(button2, gbc);
+	
+	
+	
+	        frame.add(panel);
+	        frame.setVisible(true);
+	
+	
 
-        frame.setSize(600,600);
-        frame.setResizable(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GridBagLayout layout = new GridBagLayout();
-
-
-        JPanel panel = new JPanel();
-        JPanel panel2 = new JPanel();
-        label = new JLabel("",SwingConstants.CENTER);
-        Font labelFont = label.getFont();
-        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
-
-        JLabel label2 = new JLabel("PREDICTED NUMBER",SwingConstants.CENTER);
-        label2.setFont(new Font(labelFont.getName(), Font.PLAIN, 12));
-        contentPane = new JPanel();
-        contentPane.add(label2);
-        button = new JButton("Classify Image");
-        button2 = new JButton("Erase Image");
-        button.addActionListener(new ButtonListeners());
-        button2.addActionListener(new ButtonListeners());
-
-        contentPane.setLayout(new BorderLayout());
-        scribblePane = new ScribblePane();
-        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-       // scribblePane.setBackground(Color.black);
-
-        contentPane.add(scribblePane, BorderLayout.CENTER);
-
-
-
-       // contentPane.add(toolbar, BorderLayout.NORTH);
-
-
-        panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
-        panel2.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
-
-
-
-        panel.setLayout(layout);
-        panel2.setLayout(new BorderLayout());
-        panel2.add(label, BorderLayout.SOUTH);
-        panel2.add(label2, BorderLayout.NORTH);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(contentPane, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        panel.add(panel2,gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        //gbc.fill = GridBagConstraints.HORIZONTAL;
-        //gbc.gridwidth = 2;
-        panel.add(button, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-
-        panel.add(button2, gbc);
-
-
-
-        frame.add(panel);
-
-
-
-        frame.setTitle("GUI");
-        frame.setVisible(true);
-
-
-
-
+    	}
+    	
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
 
 
 
     }
 
-    class ButtonListeners implements ActionListener{
+	    class ButtonListeners implements ActionListener{
+	
+	        public void actionPerformed(ActionEvent e){
+	        	
+	        	if(e.getSource() == button) {
+	            	try {
+		                i++;
+		                saveDrawing(i);
+	
+		        		File imagePath = new File("drawnImages\\save" + i + ".png");
+		        		int outputVal = Classifier.prediction(imagePath, model);
+	
+		                label.setText("PREDICTED VALUE: " + outputVal);
+	            	}
+	            	
+	            	catch(IOException exception) {
+	            		exception.printStackTrace();
+	            	}
+	        	
+	        	}
+	        	
+	        	else if(e.getSource() == button2) {
+	                scribblePane.erase();
+	                deleteFile("save"+i+".png");
+	                label.setText("");
+	        		
+	        	}
+	        }
 
-        public void actionPerformed(ActionEvent e){
-        	
-        	if(e.getSource() == button) {
-            	try {
-	                System.out.println("save");
-	                i++;
-	                saveDrawing(i);
-	                
-	                File path = new File("modelSave\\savedModel.zip");
-	        		MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(path);
-	        		File imagePath = new File("drawnImages\\save" + i + ".png");
-	        		int outputVal = Classifier.prediction(imagePath, model);
-	              
-	                
-	                
-	                label.setText("Predicted Value: " + outputVal);
-                
-            	}
-            	
-            	catch(IOException exception) {
-            		exception.printStackTrace();
-            	}
-        	
-        	}
-        	
-        	else if(e.getSource() == button2) {
-        		
-        		System.out.println("erase");
-                scribblePane.erase();
-                deleteFile("save"+i+".png");
-                label.setText("");
-        		
-        	}
-        }
+	    }
 
-
-    
-    
-
-}
-
-    public static void saveDrawing(int i){
+    public void saveDrawing(int i){
 
         BufferedImage imagebuf = null;
         imagebuf = scribblePane.getImage();
         //scribblePane.paint(graphics2D);
         try {
             ImageIO.write(imagebuf, "png", new File("drawnImages\\save" + i +".png"));
-            System.out.println("image saved");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            System.out.println("error");
+           e.printStackTrace();
         }
     }
 
-    public static void deleteFile (String fileName) {
+    public void deleteFile (String fileName) {
         File myObj = new File("drawnImages\\save" + i + ".png");
-        if (myObj.delete()) {
-            System.out.println("Deleted the file: " + myObj.getName());
-        } else {
-            System.out.println("Failed to delete the file.");
-        }
+        myObj.delete();
     }
 
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -262,7 +231,7 @@ class ScribblePane extends JPanel {
 
         this.clear();
         g.setColor(color);
-        ((Graphics2D) g).setStroke(new BasicStroke(18));
+        ((Graphics2D) g).setStroke(new BasicStroke(25));
         g.drawLine(last_x, last_y, x, y);
         moveto(x, y);
 
@@ -276,7 +245,7 @@ class ScribblePane extends JPanel {
     }
 
     public BufferedImage getImage (){
-        BufferedImage scaledImage = GUI2.resize(bufferImage, 28,28);
+        BufferedImage scaledImage = GUI.resize(bufferImage, 28,28);
         return scaledImage;
 
 

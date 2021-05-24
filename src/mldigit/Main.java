@@ -32,7 +32,7 @@ public class Main {
 
 	public static void main(String[] args){
 		
-		trainClassifier();
+		//trainClassifier();
 		
 		new GUI();
 		
