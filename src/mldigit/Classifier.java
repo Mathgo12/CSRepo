@@ -30,7 +30,7 @@ import java.io.*;
 
 public class Classifier {
 
-	private static String path = "C:\\Users\\prsnb\\MnistData\\mnist_png\\";
+	private static String path = "mnist_png\\";
 	private static int batches = 10;
 	private static int epochs = 1;
 	private static MultiLayerNetwork network;
@@ -66,8 +66,7 @@ public class Classifier {
 	
 	public static void trainTestModel(DataSetIterator trainIterator, DataSetIterator testIterator) {
 		
-	    
-        System.out.print("Build Model...");
+		System.out.print("Build Model...");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()   //Building Neural Network Model
                 .seed(randomSeed)
                 .updater(new Nesterovs(0.006, 0.9)) //0.006 is the learning rate, 0.9 is Nesterov's momentum 
@@ -137,7 +136,7 @@ public class Classifier {
 	        trainTestModel(trainIterator, testIterator);
 	        
 	        //Export model as file
-	        File ministModelPath = new File("C:\\Users\\prsnb\\MnistData\\Save\\savedModel.zip");
+	        File ministModelPath = new File("modelSave\\savedModel.zip");
 	        ModelSerializer.writeModel(network, ministModelPath, false);
 	        
 	       

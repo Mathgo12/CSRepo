@@ -5,22 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.Graphics2D;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
@@ -28,8 +16,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.imageio.ImageIO;
 
 public class GUI  {
@@ -37,16 +24,14 @@ public class GUI  {
     private static  JButton button;
     private static JButton button2;
     private static JLabel label;
-    private static JLabel label2;
     private static ScribblePane scribblePane;
     private static JPanel contentPane;
-    //private Bitmap  mBitmap;
     BufferedImage bufferImage;
 
     public static void main(String[] args){
 
         new GUI();
-        
+
     }
 
 
@@ -55,20 +40,24 @@ public class GUI  {
     public GUI(){
         JFrame frame = new JFrame();
 
-        frame.setSize(300,300);
+        frame.setSize(600,600);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GridBagLayout layout = new GridBagLayout();
 
 
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
-        label = new JLabel("number");
-        label2 = new JLabel();
+        label = new JLabel("",SwingConstants.CENTER);
+        Font labelFont = label.getFont();
+        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
+
+        JLabel label2 = new JLabel("PREDICTED NUMBER",SwingConstants.CENTER);
+        label2.setFont(new Font(labelFont.getName(), Font.PLAIN, 12));
         contentPane = new JPanel();
         contentPane.add(label2);
         button = new JButton("Classify Image");
         button2 = new JButton("Erase Image");
-
         button.addActionListener(new ButtonListeners());
         button2.addActionListener(new ButtonListeners());
 
@@ -80,27 +69,19 @@ public class GUI  {
         contentPane.add(scribblePane, BorderLayout.CENTER);
 
 
-        // Create a menubar and add it to this window. Note that JFrame
-        // handles menus specially and has a special method for adding them
-        // outside of the content pane.
-        JMenuBar menubar = new JMenuBar(); // Create a menubar
-        //frame.setJMenuBar(menubar); // Display it in the JFrame
 
-        // Create menus and add to the menubar
-        JMenu filemenu = new JMenu("File");
-        menubar.add(filemenu);
-        JToolBar palette = new JToolBar();
-      
-        palette.setOrientation(SwingConstants.VERTICAL);
-       // contentPane.add(palette, BorderLayout.WEST);
+       // contentPane.add(toolbar, BorderLayout.NORTH);
+
 
         panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+        panel2.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
 
 
 
         panel.setLayout(layout);
         panel2.setLayout(new BorderLayout());
-        panel2.add(label, BorderLayout.WEST);
+        panel2.add(label, BorderLayout.SOUTH);
+        panel2.add(label2, BorderLayout.NORTH);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -122,85 +103,100 @@ public class GUI  {
 
         panel.add(button2, gbc);
 
-        
+
+
         frame.add(panel);
+
+
+
         frame.setTitle("GUI");
-        frame.pack();
         frame.setVisible(true);
 
 
+
+
+
+
+
     }
-
-
-    //Start Listeners
 
     class ButtonListeners implements ActionListener{
 
-            public void actionPerformed(ActionEvent e){
-            	
-            	if(e.getSource() == button) {
-	            	try {
-		                System.out.println("save");
-		                saveDrawing(i);
-		                
-		                File path = new File("C:\\Users\\prsnb\\MnistData\\Save\\savedModel.zip");
-		        		MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(path);
-		        		File imagePath = new File("C:\\eclpise\\eclipse-workspace\\ml\\drawnImages\\save" + i + ".png");
-		        		int outputVal = Classifier.prediction(imagePath, model);
-		              
-		                
-		                i++;
-		                label.setText("Predicted Value: " + outputVal);
+        public void actionPerformed(ActionEvent e){
+        	
+        	if(e.getSource() == button) {
+            	try {
+	                System.out.println("save");
+	                i++;
+	                saveDrawing(i);
 	                
-	            	}
-	            	
-	            	catch(IOException exception) {
-	            		exception.printStackTrace();
-	            	}
-            	
+	                File path = new File("modelSave\\savedModel.zip");
+	        		MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(path);
+	        		File imagePath = new File("drawnImages\\save" + i + ".png");
+	        		int outputVal = Classifier.prediction(imagePath, model);
+	              
+	                
+	                
+	                label.setText("Predicted Value: " + outputVal);
+                
             	}
             	
-            	else if(e.getSource() == button2) {
-            		
-            		System.out.println("erase");
-                    scribblePane.erase();
-                    deleteFile("save"+i+".png");
-                    label.setText("");
-            		
+            	catch(IOException exception) {
+            		exception.printStackTrace();
             	}
-            }
+        	
+        	}
+        	
+        	else if(e.getSource() == button2) {
+        		
+        		System.out.println("erase");
+                scribblePane.erase();
+                deleteFile("save"+i+".png");
+                label.setText("");
+        		
+        	}
+        }
 
 
-        
-        
+    
+    
 
-    }
-    //End Listeners
-    public static void saveDrawing(int i) {
+}
 
-            //throws AWTException {
+    public static void saveDrawing(int i){
+
         BufferedImage imagebuf = null;
-
         imagebuf = scribblePane.getImage();
-        Graphics2D graphics2D = imagebuf.createGraphics();
-        scribblePane.paint(graphics2D);
+        //scribblePane.paint(graphics2D);
         try {
             ImageIO.write(imagebuf, "png", new File("drawnImages\\save" + i +".png"));
             System.out.println("image saved");
         } catch (Exception e) {
-           
+            // TODO Auto-generated catch block
             System.out.println("error");
         }
     }
 
     public static void deleteFile (String fileName) {
-            File myObj = new File("C:\\eclpise\\eclipse-workspace\\ml\\drawnImages\\save"+i+".png");
-            if (myObj.delete()) {
-                System.out.println("Deleted the file: " + myObj.getName());
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
+        File myObj = new File("drawnImages\\save" + i + ".png");
+        if (myObj.delete()) {
+            System.out.println("Deleted the file: " + myObj.getName());
+        } else {
+            System.out.println("Failed to delete the file.");
         }
+    }
+
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
+    }
+
 
 
 
@@ -215,35 +211,38 @@ public class GUI  {
      * the ScribblePane2 component. Note that actions of this type have icons
      * rather than labels
      */
+
+
+
 }
 
 class ScribblePane extends JPanel {
 
-    BufferedImage bufferImage;
-    Graphics2D g;
-    public ScribblePane() {
-        // Give the component a preferred size
-        setPreferredSize(new Dimension(200, 200));
-        bufferImage = new BufferedImage(200, 200,
-                BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage bufferImage;
+    private Graphics2D g;
+    private int s;
+    private Color color = Color.white;
 
+
+    public ScribblePane() {
+        s = 200;
+        this.setPreferredSize(new Dimension(s, s));
+        bufferImage = new BufferedImage(s, s, BufferedImage.TYPE_INT_ARGB);
         g = (Graphics2D) bufferImage.getGraphics();
 
         g.setColor(Color.BLACK);
-        g.fillRect(0,0,200,200);
-
-        //this.paint(g);
+        g.fillRect(0,0,s,s);
         
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                moveto(e.getX(), e.getY());
-                requestFocus();
+                moveto(e.getX(), e.getY()); // Move to click position
+                requestFocus(); // Take keyboard focus
             }
-        });   
+        });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                lineto(e.getX(), e.getY());
+                lineto(e.getX(), e.getY()); // Draw to mouse position
             }
         });
 
@@ -261,23 +260,13 @@ class ScribblePane extends JPanel {
     /** Draw from the last point to this point, then remember new point */
     public void lineto(int x, int y) {
 
-
-        //Graphics g = getGraphics();
-        //BufferedImage newBufferedImage = new BufferedImage(200,200,
-              // BufferedImage.TYPE_INT_ARGB);
-
-        // Get the object to draw with
         this.clear();
         g.setColor(color);
-        ((Graphics2D) g).setStroke(new BasicStroke(18));// Tell it what color to use
-        g.drawLine(last_x, last_y, x, y); // Tell it what to draw
+        ((Graphics2D) g).setStroke(new BasicStroke(18));
+        g.drawLine(last_x, last_y, x, y);
         moveto(x, y);
 
         g.drawImage(bufferImage,0,0, null);
-
-        //this.paint(g);
-        //g.drawImage(bufferImage, x,y,null);
-        //bufferImage = newBufferedImage;// Save the current point
 
     }
     public void paintComponent(Graphics g){
@@ -287,7 +276,9 @@ class ScribblePane extends JPanel {
     }
 
     public BufferedImage getImage (){
-         return bufferImage;
+        BufferedImage scaledImage = GUI2.resize(bufferImage, 28,28);
+        return scaledImage;
+
 
     }
 
@@ -303,20 +294,20 @@ class ScribblePane extends JPanel {
     }
     public void erase(){
 
-        g.clearRect(0,0,200,200);
-        BufferedImage newBufferImage = new BufferedImage(200, 200,
+        g.clearRect(0,0,s,s);
+        BufferedImage newBufferImage = new BufferedImage(s, s,
                 BufferedImage.TYPE_INT_ARGB);
         bufferImage = newBufferImage;
         g = (Graphics2D) bufferImage.getGraphics();
         g.setColor(Color.BLACK);
-        g.fillRect(0,0,200,200);
+        g.fillRect(0,0,s,s);
+        this.clear();
 
 
     }
 
     /** This field holds the current drawing color property */
-    Color color = Color.white;
-
+ 
     /** This is the property "setter" method for the color property */
     public void setColor(Color color) {
         this.color = color;
@@ -328,4 +319,5 @@ class ScribblePane extends JPanel {
     }
 
 }
+
 
