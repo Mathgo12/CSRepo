@@ -1,18 +1,14 @@
 package mldigit;
 
 import org.deeplearning4j.nn.conf.layers.* ; //{DenseLayer, GravesLSTM, OutputLayer, RnnOutputLayer};
-import org.deeplearning4j.nn.conf.* ;//{ComputationGraphConfiguration, MultiLayerConfiguration, NeuralNetConfiguration, Updater};
 
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.learning.config.AdaGrad;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.learning.config.Nesterovs;
-import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.split.FileSplit;
@@ -27,7 +23,6 @@ import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.classification.Evaluation;
 
@@ -75,24 +70,26 @@ public class Classifier {
         System.out.print("Build Model...");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()   //Building Neural Network Model
                 .seed(randomSeed)
-                .updater(new Nesterovs(0.006, 0.9))
-                .l2(1e-4).list()
+                .updater(new Nesterovs(0.006, 0.9)) //0.006 is the learning rate, 0.9 is Nesterov's momentum 
+                //.l2(0.02) //L2 Regularization plus lambda (regularization coefficient)
+                .list()
                 .layer(new DenseLayer.Builder()
                         .nIn(784)
-                        .nOut(1000)
+                        .nOut(1000) //1000 nodes in hidden layer
                         .activation(Activation.RELU)
-                        .weightInit(WeightInit.XAVIER).build())
+                        .weightInit(WeightInit.NORMAL)
+                        .build())
                 .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nIn(1000)
                         .nOut(10)
-                        .activation(Activation.SOFTMAX)
-                        .weightInit(WeightInit.XAVIER).build())
+                        .activation(Activation.SOFTMAX) //turns neural network outputs to probabilities that the input data is a 0,1,2, etc.
+                        .weightInit(WeightInit.NORMAL)
+                        .build())
                 .build();
 
         network = new MultiLayerNetwork(conf);
         network.init();
-
-        network.setListeners(new ScoreIterationListener(500));  //Print score every 500 iterations
+        //Print score every 500 iterations
         System.out.print("Train Model...");
         
         //evaluate model
@@ -126,9 +123,6 @@ public class Classifier {
         	}
         }
 		
-        System.out.println("Best Prediction: " + bestValue);
-
-
         return bestValue;
         
 		
@@ -136,7 +130,6 @@ public class Classifier {
 	
 	public static void main(String[] args) throws IOException{
 		
-		    
 			DataSetIterator trainIterator = dataProcessor("training", 60000);
 	        
 	        DataSetIterator testIterator = dataProcessor("testing", 10000);
