@@ -192,10 +192,9 @@ public class GUI  {
     }
 
 
-
-
-
 }
+
+
 
 class ScribblePane extends JPanel {
 
@@ -264,13 +263,6 @@ class ScribblePane extends JPanel {
 
     }
 
-    /**
-     * Clear the drawing area, using the component background color. This method
-     * works by requesting that the component be redrawn. Since this component
-     * does not have a paintComponent() method, nothing will be drawn. However,
-     * other parts of the component, such as borders or sub-components will be
-     * drawn correctly.
-     */
     public void clear() {
         repaint();
     }
@@ -290,15 +282,7 @@ class ScribblePane extends JPanel {
 
     }
  
-    /** This is the property "setter" method for the color property */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    /** This is the property "getter" method for the color property */
-    public Color getColor() {
-        return color;
-    }
+ 
 
 }
 
