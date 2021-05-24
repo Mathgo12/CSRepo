@@ -131,22 +131,6 @@ public class Classifier {
 	{
 		return network;
 	}
-	
-	public static void main(String[] args) throws IOException{
-		
-			DataSetIterator trainIterator = dataProcessor("training", 60000);
-	        
-	        DataSetIterator testIterator = dataProcessor("testing", 10000);
-	       
-	        trainTestModel(trainIterator, testIterator);
-	        
-	        //Export model as file
-	        File ministModelPath = new File("modelSave\\savedModel.zip");
-	        ModelSerializer.writeModel(network, ministModelPath, false);
-	        
-	       
-	      
-	}
 
 }
 
