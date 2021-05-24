@@ -104,7 +104,6 @@ public class GUI  {
     	}
 
 
-
     }
 
 	    class ButtonListeners implements ActionListener{
@@ -135,14 +134,13 @@ public class GUI  {
 	        		
 	        	}
 	        }
-
-	    }
+         }
 
     public void saveDrawing(int i){
 
         BufferedImage imagebuf = null;
         imagebuf = scribblePane.getImage();
-        //scribblePane.paint(graphics2D);
+        
         try {
             ImageIO.write(imagebuf, "png", new File("drawnImages\\save" + i +".png"));
         } catch (Exception e) {
@@ -156,7 +154,8 @@ public class GUI  {
     }
 
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        
+	Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = dimg.createGraphics();
@@ -167,23 +166,9 @@ public class GUI  {
     }
 
 
-
-
-    /** This inner class defines the "clear" action that clears the scribble */
-
-
-    /** This inner class defines the "quit" action to quit the program */
-
-
-    /**
-     * This inner class defines an Action that sets the current drawing color of
-     * the ScribblePane2 component. Note that actions of this type have icons
-     * rather than labels
-     */
-
-
-
 }
+
+
 
 class ScribblePane extends JPanel {
 
@@ -231,13 +216,14 @@ class ScribblePane extends JPanel {
 
         this.clear();
         g.setColor(color);
-        ((Graphics2D) g).setStroke(new BasicStroke(25));
+        ((Graphics2D) g).setStroke(new BasicStroke(20));
         g.drawLine(last_x, last_y, x, y);
         moveto(x, y);
 
         g.drawImage(bufferImage,0,0, null);
 
     }
+    
     public void paintComponent(Graphics g){
 
         g.drawImage(bufferImage,0,0, null);
@@ -251,16 +237,11 @@ class ScribblePane extends JPanel {
 
     }
 
-    /**
-     * Clear the drawing area, using the component background color. This method
-     * works by requesting that the component be redrawn. Since this component
-     * does not have a paintComponent() method, nothing will be drawn. However,
-     * other parts of the component, such as borders or sub-components will be
-     * drawn correctly.
-     */
     public void clear() {
         repaint();
     }
+    
+
     public void erase(){
 
         g.clearRect(0,0,s,s);
@@ -274,18 +255,8 @@ class ScribblePane extends JPanel {
 
 
     }
-
-    /** This field holds the current drawing color property */
  
-    /** This is the property "setter" method for the color property */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    /** This is the property "getter" method for the color property */
-    public Color getColor() {
-        return color;
-    }
+ 
 
 }
 
