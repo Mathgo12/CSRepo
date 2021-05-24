@@ -36,7 +36,7 @@ public class Classifier {
 	private static MultiLayerNetwork network;
 	private static int randomSeed = 56543219;
 	
-	private static DataSetIterator dataProcessor(String addedPath, int numSamples){
+	public static DataSetIterator dataProcessor(String addedPath, int numSamples){
 	    try {
 			ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
 		    RecordReader recordReader = new ImageRecordReader(28,28, labelMaker); //28x28 RGB images
@@ -125,6 +125,11 @@ public class Classifier {
         return bestValue;
         
 		
+	}
+	
+	public static MultiLayerNetwork getModel()
+	{
+		return network;
 	}
 	
 	public static void main(String[] args) throws IOException{
