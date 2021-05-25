@@ -51,16 +51,16 @@ public class GUI  {
 	        Font labelFont = label.getFont();
 	        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
 	
-	        contentPane = new JPanel();
+	        //contentPane = new JPanel();
 	        button = new JButton("Classify Image");
 	        button2 = new JButton("Erase Image");
 	        button.addActionListener(new ButtonListeners());
 	        button2.addActionListener(new ButtonListeners());
 	
-	        contentPane.setLayout(new BorderLayout());
+	       // contentPane.setLayout(new BorderLayout());
 	        scribblePane = new ScribblePane();
 	        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-	        contentPane.add(scribblePane, BorderLayout.CENTER);
+	        //contentPane.add(scribblePane, BorderLayout.CENTER);
 	
 	        GridBagLayout layout = new GridBagLayout();
 	        panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
@@ -73,7 +73,7 @@ public class GUI  {
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 	        gbc.gridx = 0;
 	        gbc.gridy = 0;
-	        panel.add(contentPane, gbc);
+	        panel.add(scribblePane, gbc);
 	
 	        gbc.gridx = 1;
 	        gbc.gridy = 0;
