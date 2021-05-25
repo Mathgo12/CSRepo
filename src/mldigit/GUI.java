@@ -90,8 +90,8 @@ public class GUI  {
 	        /** intializes constants for the GridBagLayout */
 		GridBagConstraints gbc = new GridBagConstraints();
 	        
-		/** fills vertically and horizontally if display area is larger than requested size */		       
-		gbc.fill = GridBagConstraints.BOTH;
+		/** fills horizontally if display area is larger than requested size */		       
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		
 		/** sets scribblePane to row 0, column 0 */
 	        gbc.gridx = 0;
