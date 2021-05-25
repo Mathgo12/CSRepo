@@ -57,8 +57,7 @@ public class GUI  {
 		/** increases fontsize */
 		Font labelFont = label.getFont();
 	        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
-	
-	        //contentPane = new JPanel();
+		
 		
 		/** intializes buttons for classifying and erasing the drawn images */
 	        button = new JButton("Classify Image");
@@ -67,13 +66,10 @@ public class GUI  {
 		/** adds listeners to buttons */
 	        button.addActionListener(new ButtonListeners());
 	        button2.addActionListener(new ButtonListeners());
-	
-	       // contentPane.setLayout(new BorderLayout());
-		
+
 	        /** initalizes scribblePane JPanel, sets border */
 	        scribblePane = new ScribblePane();
-	        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-	        //contentPane.add(scribblePane, BorderLayout.CENTER);
+	        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED);
 	
 		/** initializes GridBagLayout */
 	        GridBagLayout layout = new GridBagLayout();
@@ -94,24 +90,32 @@ public class GUI  {
 	        /** intializes constants for the GridBagLayout */
 		GridBagConstraints gbc = new GridBagConstraints();
 	        
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		/** fills vertically and horizontally if display area is larger than requested size */		       
+		gbc.fill = GridBagConstraints.BOTH;
+		
+		/** sets scribblePane to row 0, column 0 */
 	        gbc.gridx = 0;
 	        gbc.gridy = 0;
-	        
+	       
 		panel.add(scribblePane, gbc);
-	
+		
+		
+	        /** sets panel2 to row 1, column 0 */
 	        gbc.gridx = 1;
 	        gbc.gridy = 0;
 	        
 		panel.add(panel2,gbc);
 	
+		
+		/** sets button to row 0, columumn 1 */
 	        gbc.gridx = 0;
 	        gbc.gridy = 2;
 	        
 	        panel.add(button, gbc);
 	
+		/** sets button2 to row 1, column 1 */
 	        gbc.gridx = 1;
-	        gbc.gridy = 2;
+	        gbc.gridy = 1;
 	
 	        panel.add(button2, gbc);
 	
