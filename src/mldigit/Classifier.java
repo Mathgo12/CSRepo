@@ -43,7 +43,7 @@ public class Classifier {
 			
 			/** This RecordReader objects converts images into a series of Record objects. 
 			 *  Record objects are single vectors. Each element contains a pixel value. **/
-		    RecordReader recordReader = new ImageRecordReader(28,28, labelMaker); //28x28 RGB images
+		    RecordReader recordReader = new ImageRecordReader(28,28, labelMaker); //28x28 RGB images  
 			recordReader.initialize(new FileSplit(new File(path + addedPath)));
 			
 			
@@ -125,7 +125,7 @@ public class Classifier {
 
         network = new MultiLayerNetwork(conf); //Apply the neural network configuration to the model
         network.init();  //Initialize the model before fitting the training data
-        //Print score every 500 iterations
+     
         System.out.print("Train Model...");
         
         //evaluate model for each epoch
