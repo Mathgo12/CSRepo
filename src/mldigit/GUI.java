@@ -35,98 +35,98 @@ public class GUI  {
     	
     	try {
     	
-	    /** initializes JFrame and sets attributes */ 
-		JFrame frame = new JFrame();
-	
-	    frame.setSize(600,600);
-	    frame.setResizable(false);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.setTitle("Hand-Written Digit Recognition: numbers 0-9");
+		    /** initializes JFrame and sets attributes */ 
+			JFrame frame = new JFrame();
 		
-	    /** load saved model **/
-	    File path = new File("modelSave\\savedModel.zip");
-	    model = ModelSerializer.restoreMultiLayerNetwork(path);
+		    frame.setSize(600,600);
+		    frame.setResizable(false);
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setTitle("Hand-Written Digit Recognition: numbers 0-9");
+			
+		    /** load saved model **/
+		    File path = new File("modelSave\\savedModel.zip");
+		    model = ModelSerializer.restoreMultiLayerNetwork(path);
+		
+		    /** initializes JPanels on JFrame */
+			JPanel panel = new JPanel();
+		    JPanel panel2 = new JPanel();
+		        
+			/** initliazes and centers label that outputs predicted value */
+			label = new JLabel("PREDICTED VALUE HERE",SwingConstants.CENTER);
+		        
+			/** increases fontsize */
+			Font labelFont = label.getFont();
+		    label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
+			
+			
+			/** intializes buttons for classifying and erasing the drawn images */
+	        button = new JButton("Classify Image");
+	        button2 = new JButton("Erase Image");
+		        
+			/** adds listeners to buttons */
+	        button.addActionListener(new ButtonListeners());
+	        button2.addActionListener(new ButtonListeners());
 	
-	    /** initializes JPanels on JFrame */
-		JPanel panel = new JPanel();
-	    JPanel panel2 = new JPanel();
+	        /** initalizes scribblePane JPanel, sets border */
+	        scribblePane = new ScribblePane();
+	        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
+	
+	        /** initializes GridBagLayout */
+	        GridBagLayout layout = new GridBagLayout();
+			
+			
+		    /** sets borders to JPanels on JFrame */
+			panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+		    panel2.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+		
+		        /** sets panel's layout as GridBagLayout */
+			panel.setLayout(layout);
+			
+			/** adds label to panel2 with BorderLayout */
+	        panel2.setLayout(new BorderLayout());
+	        panel2.add(label, BorderLayout.SOUTH);
+			
+			
+		    /** intializes constants for the GridBagLayout */
+			GridBagConstraints gbc = new GridBagConstraints();
+		        
+			/** fills horizontally if display area is larger than requested size */		       
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+		
+			
+			/** sets scribblePane to row 0, column 0 */
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+	       
+			panel.add(scribblePane, gbc);
+		
+		
+	        /** sets panel2 to row 1, column 0 */
+	        gbc.gridx = 1;
+	        gbc.gridy = 0;
+		        
+			panel.add(panel2,gbc);
+		
+			
+			/** sets button to row 0, columumn 1 */
+	        gbc.gridx = 0;
+	        gbc.gridy = 1;
 	        
-		/** initliazes and centers label that outputs predicted value */
-		label = new JLabel("PREDICTED VALUE HERE",SwingConstants.CENTER);
-	        
-		/** increases fontsize */
-		Font labelFont = label.getFont();
-	    label.setFont(new Font(labelFont.getName(), Font.PLAIN, 15));
-		
-		
-		/** intializes buttons for classifying and erasing the drawn images */
-        button = new JButton("Classify Image");
-        button2 = new JButton("Erase Image");
-	        
-		/** adds listeners to buttons */
-        button.addActionListener(new ButtonListeners());
-        button2.addActionListener(new ButtonListeners());
-
-        /** initalizes scribblePane JPanel, sets border */
-        scribblePane = new ScribblePane();
-        scribblePane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-        /** initializes GridBagLayout */
-        GridBagLayout layout = new GridBagLayout();
-		
-		
-	    /** sets borders to JPanels on JFrame */
-		panel.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
-	    panel2.setBorder(BorderFactory.createEmptyBorder(30,30,10,30));
+	        panel.add(button, gbc);
 	
-	        /** sets panel's layout as GridBagLayout */
-		panel.setLayout(layout);
-		
-		/** adds label to panel2 with BorderLayout */
-        panel2.setLayout(new BorderLayout());
-        panel2.add(label, BorderLayout.SOUTH);
-		
-		
-	    /** intializes constants for the GridBagLayout */
-		GridBagConstraints gbc = new GridBagConstraints();
-	        
-		/** fills horizontally if display area is larger than requested size */		       
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+			/** sets button2 to row 1, column 1 */
+	        gbc.gridx = 1;
+	        gbc.gridy = 1;
 	
-		
-		/** sets scribblePane to row 0, column 0 */
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-       
-		panel.add(scribblePane, gbc);
+	        panel.add(button2, gbc);
 	
 	
-        /** sets panel2 to row 1, column 0 */
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-	        
-		panel.add(panel2,gbc);
-	
+	        /** adds panel to the JFrame and makes it visible */
 		
-		/** sets button to row 0, columumn 1 */
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        
-        panel.add(button, gbc);
-
-		/** sets button2 to row 1, column 1 */
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-
-        panel.add(button2, gbc);
-
-
-        /** adds panel to the JFrame and makes it visible */
+	        frame.add(panel);
+	        frame.setVisible(true);
 	
-        frame.add(panel);
-        frame.setVisible(true);
-
-
+	
 
     	}
     	

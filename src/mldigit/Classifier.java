@@ -23,7 +23,6 @@ import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.classification.Evaluation;
 
 import java.io.*;
@@ -38,7 +37,7 @@ public class Classifier {
 	
 	public static DataSetIterator dataProcessor(String addedPath, int numSamples){
 		
-		//An exception may be thrown when loading an image given a path.
+		//An exception may be thrown when loading an image given a path because the image file may not be found.
 	    try {
 			ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator(); //takes name of folder and sets it to the label
 			
@@ -48,25 +47,31 @@ public class Classifier {
 			recordReader.initialize(new FileSplit(new File(path + addedPath)));
 			
 			
-			/**A DataSet object holds data. The input features are stored as a matrix, and the output labels are 
-			 * stored as a different matrix. Each associate with one another so that each training example (a vector of pixel values)
+			/**A DataSet object holds data. The input features are stored as a matrix, 
+			 * and the output labels are stored as a different matrix. Each associate 
+			 * with one another so that each training example (a vector of pixel values)
 			 * is linked to a single output (label).
 			 * 
-			 *  A DataSet object holds a single batch of data. A DataSetIterator allows to iterate across multiple DataSet objects.
-			 *  In the first DataSetIterator, we put all the training data into a single DataSet which is why the batch size is 
-			 *  numSamples. This way, we can easily make any modifications using this DataSet object.**/
+			 *  A DataSet object holds a single batch of data. A DataSetIterator allows 
+			 *  to iterate across multiple DataSet objects. In the first DataSetIterator, 
+			 *  we put all the training data into a single DataSet which is why the batch 
+			 *  size is numSamples. This way, we can easily make any modifications using 
+			 *  this DataSet object.**/
 			
 			DataSetIterator tempDataset = new RecordReaderDataSetIterator.Builder(recordReader, numSamples)  
-		    		.classification(1,10) //We want a classification iterator. 1 refers to the index of the labels (index 0 is all the features) and 10 is the 10 outputs 0-9.
-		    		.preProcessor(new ImagePreProcessingScaler()) //Its easier to work with pixel values 0-1 instead of 0-255, so that values are scaled down.
+		    		.classification(1,10) //We want a classification iterator. 1 refers to the index of the 
+		    							  //labels (index 0 is all the features) and 10 is the 10 outputs 0-9.
+		    		.preProcessor(new ImagePreProcessingScaler()) //Its easier to work with pixel values 0-1 
+		    		                                              //instead of 0-255, so that values are scaled down.
 		    		.build();
 		    
 			/** There's only 1 DataSet object since we used all the training examples for the batch size. **/
 		    DataSet data = tempDataset.next();
 		    
-		    /**An INDArray is a more advanced version of the general java array that has a variety of methods to work with for data manipulation.
-		     * The 'inputs' variable includes the features from the DataSet object. The model can only work with 2D data, so the inputs are scaled
-		     * to be a 2-D matrix. 784 represents the total number of pixels per image. NumSamples is the total number of images being used.**/
+		    /**An INDArray is a more advanced version of the general java array that has a variety of methods to work 
+		     * with for data manipulation.The 'inputs' variable includes the features from the DataSet object. The
+		     * model can only work with 2D data, so the inputs are scaled to be a 2-D matrix. 784 represents the total 
+		     * number of pixels per image. NumSamples is the total number of images being used.**/
 		    
 		    INDArray inputs = data.getFeatures().reshape(new int[]{numSamples, 784}); 
 		    INDArray outputs = data.getLabels();
@@ -78,7 +83,8 @@ public class Classifier {
 		    dataset.shuffle(); 
 		    
 		    //DataSetIterator object which the model can work with, split into more batches
-		    DataSetIterator dataSetIterator = new ListDataSetIterator<DataSet>(dataset.asList(), batches); //DataSetIterator object which the model can work with, split into more batches
+		    //DataSetIterator object which the model can work with, split into more batches
+		    DataSetIterator dataSetIterator = new ListDataSetIterator<DataSet>(dataset.asList(), batches); 
 		    
 			return dataSetIterator;
 			
@@ -97,7 +103,7 @@ public class Classifier {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()   //Building Neural Network Model
                 .seed(randomSeed) 
                 .updater(new Nesterovs(0.006, 0.9)) //0.006 is the learning rate, 0.9 is Nesterov's momentum 
-                .l2(0.001) //L2 Regularization plus lambda (regularization coefficient)
+                .l2(0.0001) //L2 Regularization plus lambda (regularization coefficient)
                 .list()
                 .layer(new DenseLayer.Builder()
                         .nIn(784)   //Each input image is interpreted as a row of pixel values, and there are 784 pixels
@@ -105,7 +111,11 @@ public class Classifier {
                         .activation(Activation.RELU)  //Activation function (eliminates possible negative pixel values)
                         .weightInit(WeightInit.UNIFORM) //Internal model parameters are randomized uniformly
                         .build())
-                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD) //The loss function for assessing how well the model is predicting for each training example.
+                
+              /**The loss function for assessing how well the model is predicting for each training example.
+               * Higher loss makes the model change certain internal parameters so that new predictions may have 
+               * a lower loss. **/
+                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD) 
                         .nIn(1000)
                         .nOut(10)
                         .activation(Activation.SOFTMAX) //turns neural network outputs to probabilities that the input data is a 0,1,2, etc.
@@ -142,7 +152,8 @@ public class Classifier {
         int bestValue = 0;
         
         /** This code computes the largest value in the output array, which includes decimal values for how confident 
-         * the model is for each prediction (0,1,2, ...). The highest value is likely to be associated with the **/
+         * the model is for each prediction (0,1,2, ...). The highest value is likely to be associated with the true
+         * value of the number. **/
         for(int i = 0; i<output.length(); i++)  // Prediction confidences (all add up to 1). The value closest to 1 is predicted. 
         {
         	if(output.getFloat(i) > highest) { 
@@ -151,11 +162,11 @@ public class Classifier {
         	}
         }
 		
-        return bestValue;
+        return bestValue;  
         
 		
 	}
-	
+
 	public static MultiLayerNetwork getModel()
 	{
 		return network;
